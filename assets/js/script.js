@@ -252,6 +252,12 @@ var loadTasks = function(){
     //get task items from local storage
     tasks = localStorage.getItem("tasks");
 
+    //makes sure doensnt run if null
+    if (!tasks){
+        tasks=[];
+        return false
+    }
+
     //convert from string back to array data
     tasks = JSON.parse(tasks);
 
@@ -277,21 +283,24 @@ var loadTasks = function(){
         //check what task status is and put in appropriate position
         var taskStatus = tasks[i].status;
         if(taskStatus === "to-do"){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex =0
+            listItemEl.querySelector("select[name='status-change']").selectedIndex ="0";
             tasksToDoEl.appendChild(listItemEl);
         }
-        else if(taskStatus === "in-progress"){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex =1
+        else if(taskStatus === "in progress"){
+            listItemEl.querySelector("select[name='status-change']").selectedIndex ="1";
             tasksInProgressEl.appendChild(listItemEl);
         }
-        else if(taskStatus === "complete"){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex =2
+        else if(taskStatus === "completed"){
+            listItemEl.querySelector("select[name='status-change']").selectedIndex ="2";
             tasksCompletedEl.appendChild(listItemEl);
         }
         taskIdCounter++
         console.log(listItemEl);
     }
 }
+
+//displays localstorage data upon loading the page
+loadTasks();
 
 pageContentEl.addEventListener("click", taskButtonHandler);
 
