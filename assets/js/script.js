@@ -242,8 +242,55 @@ var taskStatusChangeHandler = function(event){
     saveTasks();
 };
 
+//function for saving tasks to local storage
 var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+//function for loading the local storage data to the page on load
+var loadTasks = function(){
+    //get task items from local storage
+    tasks = localStorage.getItem("tasks");
+
+    //convert from string back to array data
+    tasks = JSON.parse(tasks);
+
+    //for loop that creates the elements on the page
+    for(var i = 0; i < tasks.length; i++) {
+        //gets id of each item stored in local storage
+        var taskIdCounter = tasks[i].id;
+        //recreate list items and set data-task-id to taskIdCounter
+        var listItemEl = document.createElement("li");
+        listItemEl.className = "task-item";
+        listItemEl.setAttribute("data-task-id", taskIdCounter);
+
+        //create task info element
+        var taskInfoEl = document.createElement("div");
+        taskInfoEl.className = "task-info"
+        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
+        listItemEl.appendChild(taskInfoEl);
+
+        //create task actions element
+        var taskActionEl = createTaskActions(taskIdCounter);
+        listItemEl.appendChild(taskActionEl);
+
+        //check what task status is and put in appropriate position
+        var taskStatus = tasks[i].status;
+        if(taskStatus === "to-do"){
+            listItemEl.querySelector("select[name='status-change']").selectedIndex =0
+            tasksToDoEl.appendChild(listItemEl);
+        }
+        else if(taskStatus === "in-progress"){
+            listItemEl.querySelector("select[name='status-change']").selectedIndex =1
+            tasksInProgressEl.appendChild(listItemEl);
+        }
+        else if(taskStatus === "complete"){
+            listItemEl.querySelector("select[name='status-change']").selectedIndex =2
+            tasksCompletedEl.appendChild(listItemEl);
+        }
+        taskIdCounter++
+        console.log(listItemEl);
+    }
 }
 
 pageContentEl.addEventListener("click", taskButtonHandler);
